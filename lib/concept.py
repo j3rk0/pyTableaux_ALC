@@ -17,30 +17,31 @@
 
 def nnf(concept):
     """ this function convert an axiom to his nnf form"""
-    if 'c_name' in concept.keys():
+
+    if 'c_name' in concept.keys():  # nnf(c) = c
         return concept
-    elif 'and' in concept.keys():
+    elif 'and' in concept.keys(): # nnf( c1 and c2) = nnf(c1) and nnf(c2)
         return {'and': [nnf(c) for c in concept['and']]}
-    elif 'or' in concept.keys():
+    elif 'or' in concept.keys():  # nnf(c1 or c2) = nnf(c1) or nnf(c2)
         return {'or': [nnf(c) for c in concept['or']]}
-    elif 'forall' in concept.keys():
+    elif 'forall' in concept.keys(): # nnf( forall R.C) = forall R.nnf(C)
         return {'forall': (concept['forall'][0], nnf(concept['forall'][1]))}
-    elif 'exists' in concept.keys():
+    elif 'exists' in concept.keys(): # nnf(exists R.C) = exists R.nnf(C)
         return {'exists': (concept['exists'][0], nnf(concept['exists'][1]))}
     elif 'neg' in concept.keys():
         arg_neg = concept['neg']
-        if 'neg' in arg_neg.keys():
+        if 'neg' in arg_neg.keys(): # nnf( neg neg C ) = nnf(C)
             return nnf(arg_neg['neg'])
-        elif 'c_name' in arg_neg.keys():
+        elif 'c_name' in arg_neg.keys(): # nnf(neg C) = neg C
             return concept
-        elif 'and' in arg_neg.keys():
+        elif 'and' in arg_neg.keys():  # nnf( neg(C1 and C2) ) = nnf(neg C1) or nnf(neg C2)
             return {'or': [ nnf({'neg': c}) for c in arg_neg['and']]}
-        elif 'or' in arg_neg.keys():
+        elif 'or' in arg_neg.keys():  # nnf( neg(C1 or C2) ) = nnf(neg C1) and nnf(neg C2)
             return {'and': [ nnf({'neg': c}) for c in arg_neg['or']]}
-        elif 'forall' in arg_neg.keys():
-            return {'exists': (arg_neg['forall'][0], nnf(arg_neg['forall'][1]))}
-        elif 'exists' in arg_neg.keys():
-            return {'forall': (arg_neg['exists'][0], nnf(arg_neg['exists'][1]))}
+        elif 'forall' in arg_neg.keys():  # nnf( neg(forall R.C)  ) = exists R.nnf(neg C)
+            return {'exists': (arg_neg['forall'][0], nnf({'neg':arg_neg['forall'][1]}))}
+        elif 'exists' in arg_neg.keys():  # nnf( neg(exists R.C) ) = forall R.nnf(neg C)
+            return {'forall': (arg_neg['exists'][0], nnf({'neg':arg_neg['exists'][1]}))}
 
 def to_str(concept):
     """print a concept in dict format to a string"""
