@@ -1,22 +1,32 @@
-import owlready2 as owl
+from lib.concept import *
 
-onto = owl.get_ontology("http://www.lesfleursdunormal.fr/static/_downloads/pizza_onto.owl")
-onto.load()
+
+
+
+
+# %% esempi dagli appunti dalle slide
+A = {'c_name': 'A'}
+B = {'c_name': 'B'}
+R = {'r_name': 'R'}
+S = {'r_name': 'S'}
+
+C1 = {'and': [A, {'exists': (R, B)}, {'exists': (R, {'neg': B})}]}
+
+C2 = {'and': [{'forall': (S, A)}, {'exists': (R, B)}, {'forall': (R, A)}]}
+
+print(to_str(C1))
 
 # %%
 
 
-# {'name':'C'}
-# {'and':[C1,...,Cn]}
-# { 'or':[C1,...,Cn]}
-# { 'neg': C }
-# { 'forall':(R,C)}
-# { 'exists':(R,C)}
+C = {'c_name': 'C'}
+D = {'c_name': 'D'}
+E = {'c_name': 'E'}
 
-H = {'name': 'H'}
-G = {'name': 'G'}
-W = {'name': 'W'}
+x = {'neg':
+         {'and': [{'neg': C},
+                  {'or': [{'neg': D},
+                          E]}]}}
 
-C = {'and': [{'exists': (H, G)},
-             {'exists': (H, W)},
-             {'forall': (H, {'or': [{'neg': G}, {'neg': W}]})}]}
+nnf_x = nnf(x)
+print(to_str(nnf_x))
