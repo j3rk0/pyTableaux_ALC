@@ -1,8 +1,8 @@
+"""
+ in this project axioms are expressed as dictionary as following:
 
-""" in this project axioms are expressed as dictionary as following:
-
- {'r_name':'R'} // relation
- {'c_name':'C'} //atomic concept
+ {'relation':'R' } // relation
+ {'concept':'C' } //atomic concept
 
  {'and':[C1,...,Cn]} //conjunction
  { 'or':[C1,...,Cn]} //disjunction
@@ -15,60 +15,64 @@
 """
 
 
-def nnf(concept):
-    """ this function convert an axiom to his nnf form"""
+def concept_equal(c1, c2):
+    return c1.keys() == c2.keys() and list(c1.values())[0] == list(c2.values())
 
-    if 'c_name' in concept.keys():  # nnf(c) = c
+
+def nnf(concept):
+    """ this recursive function convert an axiom to his nnf form"""
+
+    if 'concept' in concept.keys():  # nnf(c) = c ( recursion base case)
         return concept
-    elif 'and' in concept.keys(): # nnf( c1 and c2) = nnf(c1) and nnf(c2)
+    elif 'and' in concept.keys():  # nnf( c1 and c2) = nnf(c1) and nnf(c2)
         return {'and': [nnf(c) for c in concept['and']]}
     elif 'or' in concept.keys():  # nnf(c1 or c2) = nnf(c1) or nnf(c2)
         return {'or': [nnf(c) for c in concept['or']]}
-    elif 'forall' in concept.keys(): # nnf( forall R.C) = forall R.nnf(C)
+    elif 'forall' in concept.keys():  # nnf( forall R.C) = forall R.nnf(C)
         return {'forall': (concept['forall'][0], nnf(concept['forall'][1]))}
-    elif 'exists' in concept.keys(): # nnf(exists R.C) = exists R.nnf(C)
+    elif 'exists' in concept.keys():  # nnf(exists R.C) = exists R.nnf(C)
         return {'exists': (concept['exists'][0], nnf(concept['exists'][1]))}
     elif 'neg' in concept.keys():
-        arg_neg = concept['neg']
-        if 'neg' in arg_neg.keys(): # nnf( neg neg C ) = nnf(C)
+        arg_neg = concept['neg']  # the argument of tge negation
+        if 'neg' in arg_neg.keys():  # nnf( neg neg C ) = nnf(C)
             return nnf(arg_neg['neg'])
-        elif 'c_name' in arg_neg.keys(): # nnf(neg C) = neg C
+        elif 'concept' in arg_neg.keys():  # nnf(neg C) = neg C
             return concept
         elif 'and' in arg_neg.keys():  # nnf( neg(C1 and C2) ) = nnf(neg C1) or nnf(neg C2)
-            return {'or': [ nnf({'neg': c}) for c in arg_neg['and']]}
+            return {'or': [nnf({'neg': c}) for c in arg_neg['and']]}
         elif 'or' in arg_neg.keys():  # nnf( neg(C1 or C2) ) = nnf(neg C1) and nnf(neg C2)
-            return {'and': [ nnf({'neg': c}) for c in arg_neg['or']]}
+            return {'and': [nnf({'neg': c}) for c in arg_neg['or']]}
         elif 'forall' in arg_neg.keys():  # nnf( neg(forall R.C)  ) = exists R.nnf(neg C)
-            return {'exists': (arg_neg['forall'][0], nnf({'neg':arg_neg['forall'][1]}))}
+            return {'exists': (arg_neg['forall'][0], nnf({'neg': arg_neg['forall'][1]}))}
         elif 'exists' in arg_neg.keys():  # nnf( neg(exists R.C) ) = forall R.nnf(neg C)
-            return {'forall': (arg_neg['exists'][0], nnf({'neg':arg_neg['exists'][1]}))}
+            return {'forall': (arg_neg['exists'][0], nnf({'neg': arg_neg['exists'][1]}))}
+
 
 def to_str(concept):
-    """print a concept in dict format to a string"""
-    ret = []
-    if 'and' in concept.keys():
-        ret.append("(")
-        for c in concept['and']:
-            ret.append(to_str(c))
-            ret.append('and')
-        ret.pop()  # rimuovo and inutile
-        ret.append(')')
-    elif 'or' in concept.keys():
-        ret.append('(')
-        for c in concept['or']:
-            ret.append(to_str(c))
-            ret.append('or')
-        ret.pop()
-        ret.append(')')
-    elif 'neg' in concept.keys():
-        ret.append(f"not({to_str(concept['neg'])})")
-    elif 'forall' in concept.keys():
-        ret.append(f"forall {to_str(concept['forall'][0])}.{to_str(concept['forall'][1])}")
-    elif 'exists' in concept.keys():
-        ret.append(f"exists {to_str(concept['exists'][0])}.{to_str(concept['exists'][1])}")
-    elif 'c_name' in concept.keys():
-        ret.append(concept['c_name'])
-    elif 'r_name' in concept.keys():
-        ret.append(concept['r_name'])
+    """ recursive function to print a concept in dict format to a string """
+    ret = []  # buffer to build the string
 
-    return " ".join(ret)
+    if 'and' in concept.keys():
+        ret += [f"({to_str(concept['and'][0])}"] + [f"\u2293 {to_str(c)}" for c in concept['and'][1:]] + [')']
+
+    elif 'or' in concept.keys():
+        ret += [f"({to_str(concept['or'][0])}"] + [f"\u2294 {to_str(c)}" for c in concept['or'][1:]] + [')']
+
+    elif 'neg' in concept.keys():  # recursively print neg argument
+        ret.append(f"\uFFE2{to_str(concept['neg'])}")
+    elif 'forall' in concept.keys():  # recursively print forall arguments
+        ret.append(f"\u2200{to_str(concept['forall'][0])}.{to_str(concept['forall'][1])}")
+    elif 'exists' in concept.keys():  # recursively print exists argumentsnot({
+        ret.append(f"\u2203{to_str(concept['exists'][0])}.{to_str(concept['exists'][1])}")
+    elif 'concept' in concept.keys():  # print concept name (recursion base case)
+        ret.append(concept['concept'])
+    elif 'relation' in concept.keys():  # print concept name (recursion base case)
+        ret.append(concept['relation'])
+
+    if 'args' in concept.keys():
+        ret.append(f"( x{concept['args'][0]}")
+        for x in concept['args'][1:]:
+            ret.append(f", x{x}")
+        ret.append(")")
+
+    return " ".join(ret)  # join buffer element
