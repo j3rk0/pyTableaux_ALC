@@ -1,4 +1,4 @@
-from lib.concept import *
+from lib.formula import *
 
 # %% definiamo alcuni concetti e predicati per costruire degli esempi
 
@@ -46,11 +46,7 @@ print("concept in nnf:")
 print(to_str(nnf(x)))
 
 # %%
-
-
-# %%
-import timeit
-from lib.tableaux_noTbox import *
+from lib.etc.tableaux_noTBox import *
 
 C = {'and':
          [{'exists': ({'relation': 'H'}, {'concept': 'G'})},
@@ -62,35 +58,51 @@ C = {'and':
 
 print(f"axiom: {to_str(C)}")
 
-# %%
 t = Tableaux()
+start = time()
 t.check_satisfy(C)
-t.print_tableaux()
+print(time() - start)
 
-# start = timeit.default_timer()
+# %% esempio con tbox vuota
 
-# for i in range(100):
-#    t.check_satisfy(C)
-
-# end = timeit.default_timer()
-
-# print(f"elapsed time: {(end-start)/100}")
-
-
-# %%
+from lib.tableaux_notbox import *
+from lib.io import *
 
 isFailureOf = {'relation': 'isFailureOf'}
 column = {'concept': 'column'}
 pillar = {'concept': 'pillar'}
 
 C = nnf({'and': [{'exists': [isFailureOf, column]},
-             {'exists': [isFailureOf, pillar]},
-             {'neg': {'exists': [isFailureOf, {
-                 'and': [pillar, column]
-             }]}}]})
-print(to_str(C))
+                 {'exists': [isFailureOf, pillar]},
+                 {'neg': {'exists': [isFailureOf, {
+                     'and': [pillar, column]
+                 }]}}]})
 
+tab = Tableaux()
+res = tab.check_satisfy(C)
 
-t = Tableaux()
-t.check_satisfy(C)
-t.print_tableaux()
+graph = plot_graph(res)
+graph.view()
+
+# %% benchmark tbox vuota
+
+import timeit
+
+setup = """from lib.TableauxGraph import Tableaux
+C={'and':
+         [{'exists': ({'relation': 'H'}, {'concept': 'G'})},
+          {'exists': ({'relation': 'H'}, {'concept': 'W'})},
+          {'forall': ({'relation': 'H'}, {'or':
+                                              [{'neg': {'concept': 'G'}},
+                                               {'neg': {'concept': 'W'}}
+                                               ]})}]}
+"""
+
+stmt = """res = Tableaux().check_satisfy(C)"""
+
+number = 10000
+time = timeit.timeit(stmt, setup, number=number)
+
+print(f"time for iter: {(time / number):.6f}")
+
+# %%
