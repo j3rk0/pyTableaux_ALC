@@ -14,6 +14,7 @@
 
 """
 
+
 def delete_redundant_parenthesis(concept):
     key = list(concept.keys())[0]
 
@@ -94,33 +95,3 @@ def nnf(concept):
             return {'exists': (arg_neg['forall'][0], nnf({'neg': arg_neg['forall'][1]}))}
         elif 'exists' in arg_neg.keys():  # nnf( neg(exists R.C) ) = forall R.nnf(neg C)
             return {'forall': (arg_neg['exists'][0], nnf({'neg': arg_neg['exists'][1]}))}
-
-
-def to_str(concept):
-    """ recursive function to print a concept in dict format to a string """
-    ret = []  # buffer to build the string
-
-    if 'and' in concept.keys():
-        ret += [f"({to_str(concept['and'][0])}"] + [f"\u2293 {to_str(c)}" for c in concept['and'][1:]] + [')']
-
-    elif 'or' in concept.keys():
-        ret += [f"({to_str(concept['or'][0])}"] + [f"\u2294 {to_str(c)}" for c in concept['or'][1:]] + [')']
-
-    elif 'neg' in concept.keys():  # recursively print neg argument
-        ret.append(f"\uFFE2{to_str(concept['neg'])}")
-    elif 'forall' in concept.keys():  # recursively print forall arguments
-        ret.append(f"\u2200{to_str(concept['forall'][0])}.{to_str(concept['forall'][1])}")
-    elif 'exists' in concept.keys():  # recursively print exists argumentsnot({
-        ret.append(f"\u2203{to_str(concept['exists'][0])}.{to_str(concept['exists'][1])}")
-    elif 'concept' in concept.keys():  # print concept name (recursion base case)
-        ret.append(concept['concept'])
-    elif 'relation' in concept.keys():  # print concept name (recursion base case)
-        ret.append(concept['relation'])
-
-    if 'args' in concept.keys():
-        ret.append(f"( x{concept['args'][0]}")
-        for x in concept['args'][1:]:
-            ret.append(f", x{x}")
-        ret.append(")")
-
-    return " ".join(ret)  # join buffer element

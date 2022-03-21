@@ -1,5 +1,6 @@
 from lib.formula import *
-
+from lib.io import *
+from lib.engine import *
 # definiamo alcuni concetti e predicati per costruire degli esempi
 
 A = {'concept': 'A'}
