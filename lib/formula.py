@@ -14,11 +14,6 @@
 
 """
 
-
-def concept_equal(c1, c2):
-    return c1.keys() == c2.keys() and list(c1.values())[0] == list(c2.values())
-
-
 def delete_redundant_parenthesis(concept):
     key = list(concept.keys())[0]
 
