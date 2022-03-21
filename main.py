@@ -80,7 +80,7 @@ print(to_str(nnf(x)))
 
 # %% esempio con tbox vuota
 
-from lib.tableaux_notbox import *
+from lib.engine import *
 from lib.io import *
 
 isFailureOf = {'relation': 'isFailureOf'}
@@ -93,7 +93,7 @@ C = nnf({'and': [{'exists': [isFailureOf, column]},
                      'and': [pillar, column]
                  }]}}]})
 
-tab = Tableaux()
+tab = InferenceEngine()
 res = tab.check_satisfy(C)
 
 # %% plot del grafo risultante del tableaux
@@ -123,7 +123,7 @@ time = timeit.timeit(stmt, setup, number=number)
 print(f"time for iter: {(time / number):.6f}")
 
 # %%
-from lib.tableaux_notbox import Tableaux
+from lib.engine import InferenceEngine
 from lib.io import *
 
 S = {'relation': 'S'}
@@ -136,7 +136,7 @@ C1 = {'and': [{'exists': (S, C)},
               {'forall': (R, {'exists': (R, C)})}]}
 
 print(to_str(C1))
-t = Tableaux()
+t = InferenceEngine()
 res = t.check_satisfy(C1)
 graph = plot_graph(res, print='all', shape='box')
 graph.view()

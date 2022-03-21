@@ -44,10 +44,14 @@ class CompletionGraph:
         return G
 
 
-class Tableaux:
+class InferenceEngine:
 
-    def __init__(self):
+    def __init__(self, T=None):
         self.graphs = []
+        if T is None:
+            self.tbox = []
+        else:
+            self.tbox = [] + T
 
     def check_satisfy(self, C):
         C = nnf(C)
@@ -95,7 +99,7 @@ class Tableaux:
 
                         if not exists_z:  # does not exists z
                             G.add_node()
-                            G.L[G.last_individual].append(conc)
+                            G.L[G.last_individual] += [conc] + self.tbox
                             G.add_edge(rel, x, G.last_individual)
 
                 # apply exhaustively forall-rule
