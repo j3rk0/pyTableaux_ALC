@@ -51,13 +51,14 @@ class InferenceEngine:
         if T is None:
             self.tbox = []
         else:
-            self.tbox = [] + T
+            self.tbox = [T]
 
     def check_satisfy(self, C):
         C = nnf(C)
         G = CompletionGraph()
         G.init(C)
-
+        G.L[0] += self.tbox
+        self.graphs = []
         stack = [G]
         while not len(stack) == 0:
             curr = stack.pop()

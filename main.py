@@ -98,14 +98,14 @@ res = tab.check_satisfy(C)
 
 # %% plot del grafo risultante del tableaux
 
-graph = plot_graph(res, print='atomic')
+graph = plot_graph(res, show='atomic')
 graph.view()
 
 # %% benchmark tbox vuota
 
 import timeit
 
-setup = """from lib.tableaux_notbox import Tableaux
+setup = """from lib.engine import InferenceEngine
 C={'and':
          [{'exists': ({'relation': 'H'}, {'concept': 'G'})},
           {'exists': ({'relation': 'H'}, {'concept': 'W'})},
@@ -113,9 +113,10 @@ C={'and':
                                               [{'neg': {'concept': 'G'}},
                                                {'neg': {'concept': 'W'}}
                                                ]})}]}
+engine=InferenceEngine()
 """
 
-stmt = """res = Tableaux().check_satisfy(C)"""
+stmt = """res = engine.check_satisfy(C)"""
 
 number = 10000
 time = timeit.timeit(stmt, setup, number=number)
@@ -138,12 +139,63 @@ C1 = {'and': [{'exists': (S, C)},
 print(to_str(C1))
 t = InferenceEngine()
 res = t.check_satisfy(C1)
-graph = plot_graph(res, print='all', shape='box')
+graph = plot_graph(res, show='all', shape='box')
 graph.view()
 
-#%%
-from owlready2 import *
+# %% example with tbox
+from lib.engine import *
+from lib.io import *
 
+tbox = {'and': [{'or': [{'neg': A}, B]},
+                {'or': [{'neg': B}, C]},
+                {'or': [{'neg': C}, {'exists': (R, D)}]},
+                {'or': [{'neg': D}, {'neg': A}]},
+                {'or': [{'neg': A}, {'forall': (R, A)}]}]}
 
+C1 = {'and': [B, C, {'exists': (R, {'neg': A})}, {'forall': (R, C)}]}
 
+print(f'tbox: {to_str(tbox)}\nconcept: {to_str(C1)}')
 
+eng = InferenceEngine(T=tbox)
+res = eng.check_satisfy(C1)
+if res is not None:
+    graph = plot_graph(res, show='atomic', shape='box')
+    graph.view()
+else:
+    print('not satisfabile wrt tbox')
+
+# %%BENCHMARK CON TBOX
+
+import timeit
+
+setup = """from lib.engine import InferenceEngine
+tbox = {'and': [{'or': [{'neg': {'concept':'A'}}, {'concept':'D'}]},
+                {'or': [{'neg': {'concept':'B'}}, {'concept':'C'}]},
+                {'or': [{'neg': {'concept':'C'}}, {'exists': ({'relation':'R'}, {'concept':'D'})}]},
+                {'or': [{'neg': {'concept':'D'}}, {'neg': {'concept':'A'}}]},
+                {'or': [{'neg': {'concept':'A'}}, {'forall': ({'relation':'R'}, {'concept':'A'})}]}]}
+
+C1 = {'and': [{'concept':'B'}, {'concept':'C'}, {'exists': ({'relation':'R'}, {'neg': {'concept':'A'}})}, {'forall':(
+{'relation':'R'},{'concept':'C'})}]} 
+engine = InferenceEngine(tbox) """
+
+stmt = """res = engine.check_satisfy(C1)"""
+
+number = 10000
+time = timeit.timeit(stmt, setup, number=number)
+
+print(f"time for iter: {(time / number):.6f}")
+
+# %% INPUT FROM MANCHESTER
+from lib.engine import *
+from lib.io import *
+from lib.formula import *
+
+manch = "Pizza and not (hasTopping some FishTopping) and not (hasTopping some MeaTopping )"
+
+res = parse_manchester(manch)
+print(f"manchester syntax: {manch}\n"
+      f"parsed formula: {to_str(res)}")
+model = InferenceEngine().check_satisfy(res)
+graph = plot_graph(model, show='atomic', shape='box')
+graph.view()
