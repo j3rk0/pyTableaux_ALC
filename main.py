@@ -1,6 +1,6 @@
 from lib.formula import *
 
-# %% definiamo alcuni concetti e predicati per costruire degli esempi
+# definiamo alcuni concetti e predicati per costruire degli esempi
 
 A = {'concept': 'A'}
 B = {'concept': 'B'}
@@ -20,6 +20,39 @@ print("a concept:")
 print(to_str(C1))
 print("another concept:")
 print(to_str(C2))
+
+# %%eliminazione parentesi ridondanti
+
+C1 = {'and': [{'and': [A, B]},
+              {'exists': (R, {'and': [{'and': [A, B]}, B]})}
+              ]}
+print(to_str(C1))
+
+C2 = delete_redundant_parenthesis(C1)
+print(to_str(C2))
+
+# %% conversione a cnf
+
+C1 = {'or': [{'neg': {'or': [A, B]}},
+             {'or': [
+                 {'neg': C},
+                 D
+             ]}]}
+
+print('a concept:')
+print(to_str(C1))
+C2 = cnf(C1)
+C3 = delete_redundant_parenthesis(C2)
+print('concept in cnf:')
+print(to_str(C3))
+
+print('another concept')
+C1 = {'or': [{'neg': {'and': [{'neg': A}, B]}}, C]}
+print(to_str(C1))
+C2 = cnf(C1)
+C3 = delete_redundant_parenthesis(C2)
+print('another concept in cnf:')
+print(to_str(C3))
 
 # %% conversione a nnf
 
@@ -45,24 +78,6 @@ print(to_str(x))
 print("concept in nnf:")
 print(to_str(nnf(x)))
 
-# %%
-from lib.etc.tableaux_noTBox import *
-
-C = {'and':
-         [{'exists': ({'relation': 'H'}, {'concept': 'G'})},
-          {'exists': ({'relation': 'H'}, {'concept': 'W'})},
-          {'forall': ({'relation': 'H'}, {'or':
-                                              [{'neg': {'concept': 'G'}},
-                                               {'neg': {'concept': 'W'}}
-                                               ]})}]}
-
-print(f"axiom: {to_str(C)}")
-
-t = Tableaux()
-start = time()
-t.check_satisfy(C)
-print(time() - start)
-
 # %% esempio con tbox vuota
 
 from lib.tableaux_notbox import *
@@ -81,14 +96,16 @@ C = nnf({'and': [{'exists': [isFailureOf, column]},
 tab = Tableaux()
 res = tab.check_satisfy(C)
 
-graph = plot_graph(res)
+# %% plot del grafo risultante del tableaux
+
+graph = plot_graph(res, print='atomic')
 graph.view()
 
 # %% benchmark tbox vuota
 
 import timeit
 
-setup = """from lib.TableauxGraph import Tableaux
+setup = """from lib.tableaux_notbox import Tableaux
 C={'and':
          [{'exists': ({'relation': 'H'}, {'concept': 'G'})},
           {'exists': ({'relation': 'H'}, {'concept': 'W'})},
@@ -106,3 +123,27 @@ time = timeit.timeit(stmt, setup, number=number)
 print(f"time for iter: {(time / number):.6f}")
 
 # %%
+from lib.tableaux_notbox import Tableaux
+from lib.io import *
+
+S = {'relation': 'S'}
+R = {'relation': 'R'}
+C = {'concept': 'C'}
+D = {'concept': 'D'}
+C1 = {'and': [{'exists': (S, C)},
+              {'forall': (S, {'or': [{'neg': C}, {'neg': D}]})},
+              {'exists': (R, C)},
+              {'forall': (R, {'exists': (R, C)})}]}
+
+print(to_str(C1))
+t = Tableaux()
+res = t.check_satisfy(C1)
+graph = plot_graph(res, print='all', shape='box')
+graph.view()
+
+#%%
+from owlready2 import *
+
+
+
+

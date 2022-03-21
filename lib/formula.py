@@ -19,6 +19,59 @@ def concept_equal(c1, c2):
     return c1.keys() == c2.keys() and list(c1.values())[0] == list(c2.values())
 
 
+def delete_redundant_parenthesis(concept):
+    key = list(concept.keys())[0]
+
+    if key == 'or' or key == 'and':
+        for c in concept[key]:
+            if key in c.keys():
+                concept[key] += c[key]
+                concept[key].remove(c)
+        for i in range(len(concept[key])):
+            concept[key][i] = delete_redundant_parenthesis(concept[key][i])
+    elif key == 'exists' or key == 'forall':
+        concept[key] = (concept[key][0], delete_redundant_parenthesis(concept[key][1]))
+    elif key == 'neg':
+        concept[key] = delete_redundant_parenthesis(concept[key])
+    return concept
+
+
+def cnf(concept):
+    key = list(concept.keys())[0]
+
+    # group the operators in couples
+    if (key == 'and' or key == 'or') and len(concept[key]) > 2:
+        new_term = {key: concept[key][1:]}
+        concept[key] = [concept[key][0], new_term]
+
+    if key == 'forall' or key == 'exists':
+        concept[key] = (concept[key][0], cnf(concept[key][1]))
+
+    elif key == 'or' or key == 'and':
+        x1 = cnf(concept[key][0])
+        x2 = cnf(concept[key][1])
+
+        if 'and' not in x1.keys():  # x1 is atomic
+            x1 = {'and': [x1]}
+
+        if 'and' not in x2.keys():  # x2 is atomic
+            x2 = {'and': [x2]}
+
+        if key == 'and':
+            concept = {'and': x1['and'] + x2['and']}
+        elif key == 'or':
+            concept = {'and': [{'or': [t1, t2]} for t1 in x1['and'] for t2 in x2['and']]}
+
+    elif key == 'neg':
+        if 'neg' in concept[key].keys():
+            concept = cnf(concept[key][key])
+        elif 'and' in concept[key].keys():  # demorgan
+            concept = {'or': [{'neg': concept[key]['and'][0]}, {'neg': concept[key]['and'][1]}]}
+        elif 'or' in concept[key].keys():
+            concept = {'and': [{'neg': concept[key]['or'][0]}, {'neg': concept[key]['or'][1]}]}
+    return concept
+
+
 def nnf(concept):
     """ this recursive function convert an axiom to his nnf form"""
 

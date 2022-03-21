@@ -63,10 +63,21 @@ class Tableaux:
                 return curr
         return None
 
+    def is_blocked(self, G, j):
+        for i in range(G.last_individual + 1):
+            if i < j and all(xj in G.L[i] for xj in G.L[j]):
+                return True
+        return False
+
     def expand_graph(self, G):
         x = 0
         while not all(G.is_complete) and not any(G.contain_clash):
             if not G.is_complete[x] or G.contain_clash[x]:
+
+                # check for blocking
+                if self.is_blocked(G, x):
+                    G.is_complete[x] = True
+                    continue
 
                 # apply exhaustively and rule
                 G.L[x] += [t for a in G.L[x] if 'and' in a.keys() for t in a['and'] if t not in G.L[x]]
@@ -76,13 +87,13 @@ class Tableaux:
                     if 'exists' in a.keys():
                         rel, conc = a['exists']
 
-                        exists_z = False
-                        for rx, rz in G.get_edges(rel):  # are there some z so that r(x,z) and c(z) is in abox?
+                        exists_z = False  # are there some z so that r(x,z) and c(z) is in abox?
+                        for rx, rz in G.get_edges(rel):
                             if rx == x and conc in G.L[rz]:
                                 exists_z = True
                                 break
 
-                        if not exists_z:  # there is no z so that r(x,z) and c(z) in the abox
+                        if not exists_z:  # does not exists z
                             G.add_node()
                             G.L[G.last_individual].append(conc)
                             G.add_edge(rel, x, G.last_individual)
@@ -102,13 +113,18 @@ class Tableaux:
                 # apply an or rule
                 for a in G.L[x]:
                     if 'or' in a.keys() and not (a['or'][0] in G.L[x] or a['or'][1] in G.L[x]):
-                        G1 = G.copy()
-                        G2 = G.copy()
-                        G1.L[x].append(a['or'][0])
-                        G2.L[x].append(a['or'][1])
-                        return [G1, G2]
+                        ret = []
+                        for t in a['or']:  # build a new graph for each or term
+                            new_G = G.copy()
+                            new_G.L[x].append(t)
+                            ret.append(new_G)
+                        return ret
 
-                G.contain_clash[x] = any([t1['neg'] == t2 for t1 in G.L[x] if 'neg' in t1.keys() for t2 in G.L[x]])
-                G.is_complete[x] = True
+                G.is_complete[x] = True  # mark node as complete
+                # check for clash
+                if any(t1['neg'] == t2 for t1 in G.L[x] if 'neg' in t1.keys() for t2 in G.L[x]):
+                    G.contain_clash[x] = True
+                    return []
+
             x += 1
         return []
