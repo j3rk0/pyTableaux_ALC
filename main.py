@@ -99,7 +99,7 @@ res = tab.check_satisfy(C)
 
 # %% plot del grafo risultante del tableaux
 
-graph = plot_graph(res, show='atomic')
+graph = plot_graph(res, show='all')
 graph.view()
 
 # %% benchmark tbox vuota
@@ -197,6 +197,7 @@ manch = "Pizza and not (hasTopping some FishTopping) and not (hasTopping some Me
 res = parse_manchester(manch)
 print(f"manchester syntax: {manch}\n"
       f"parsed formula: {to_str(res)}")
+#%%
 model = InferenceEngine().check_satisfy(res)
 graph = plot_graph(model, show='atomic', shape='box')
 graph.view()
