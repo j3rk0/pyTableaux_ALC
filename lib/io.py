@@ -1,8 +1,5 @@
 import graphviz as gviz
-
-"""
-
-"""
+import re
 
 
 def to_str(concept):
@@ -56,7 +53,7 @@ def plot_graph(G, show='all', shape='box'):
     return dot
 
 
-def _man_to_list(formula_ms):  # parse a manchester syntax string in a list
+def man_to_list(formula_ms):  # parse a manchester syntax string in a list
     formula_ms = formula_ms.replace(' ', '')
     buffer = ''
     res = []
@@ -74,7 +71,7 @@ def _man_to_list(formula_ms):  # parse a manchester syntax string in a list
                 elif formula_ms[i + count] == ')':
                     level -= 1
             assert level == 0 and 'ERROR: PARHENTESIS NOT MATCHING'
-            res.append(_man_to_list(formula_ms[i + 1:i + count]))
+            res.append(man_to_list(formula_ms[i + 1:i + count]))
             buffer = ''
             i += count + 1
             continue
@@ -103,44 +100,63 @@ def _man_to_list(formula_ms):  # parse a manchester syntax string in a list
     return [t for t in res if not t == '']
 
 
-def parse_manchester(formula_ms):  # parse manchester string to dict
-    if type(formula_ms) == str:  # executes only on first call, parse the string to a list
-        return parse_manchester(_man_to_list(formula_ms))
+def owl_to_man(formula_owl):
+    formula_owl = formula_owl.replace('&', 'and')
+    formula_owl = formula_owl.replace('|', 'or')
+    formula_owl = formula_owl.replace('.only', ' only ')
+    formula_owl = formula_owl.replace('.some', ' some ')
+    formula_owl = formula_owl.replace('(', ' ( ')
+    formula_owl = formula_owl.replace(')', ' ) ')
 
+    s_entry = formula_owl.split(' ')
+    for i in range(len(s_entry)):
+        s_entry[i] = re.sub(r'.+[.]', '', s_entry[i])
+    return ' '.join(s_entry)
+
+
+def list_to_dict(formula_list):
     ret = None
-    if len(formula_ms) == 1:
-        if type(formula_ms[0]) == str:  # formula is an atomic concept
-            ret = {'concept': formula_ms[0]}
-        elif type(formula_ms[0]) == list:  # formula is a parhentesis
-            ret = parse_manchester(formula_ms[0])
-    elif 'and' in formula_ms:
+    if len(formula_list) == 1:
+        if type(formula_list[0]) == str:  # formula is an atomic concept
+            ret = {'concept': formula_list[0]}
+        elif type(formula_list[0]) == list:  # formula is a parhentesis
+            ret = list_to_dict(formula_list[0])
+    elif 'and' in formula_list:
         ret = {'and': []}
         i = j = 0
-        while not j == len(formula_ms):
-            if formula_ms[j] == 'and' and not i == j:  # convert each argument of the and
-                ret['and'].append(parse_manchester(formula_ms[i:j]))
+        while not j == len(formula_list):
+            if formula_list[j] == 'and' and not i == j:  # convert each argument of the and
+                ret['and'].append(list_to_dict(formula_list[i:j]))
                 i = j + 1
             j += 1
-        ret['and'].append(parse_manchester(formula_ms[i:]))
+        ret['and'].append(list_to_dict(formula_list[i:]))
 
-    elif 'or' in formula_ms:
+    elif 'or' in formula_list:
         ret = {'or': []}
         i = j = 0
-        while not j == len(list):
-            if formula_ms[j] == 'or' and not i == j:  # convert each argument of the or
-                ret['or'].append(parse_manchester(formula_ms[i:j]))
+        while not j == len(formula_list):
+            if formula_list[j] == 'or' and not i == j:  # convert each argument of the or
+                ret['or'].append(list_to_dict(formula_list[i:j]))
                 i = j + 1
             j += 1
-        ret['or'].append(parse_manchester(formula_ms[i:]))
-    elif formula_ms[0] == 'not':
-        ret = {'neg': parse_manchester(formula_ms[1:])}  # convert not argument
+        ret['or'].append(list_to_dict(formula_list[i:]))
+    elif formula_list[0] == 'not':
+        ret = {'neg': list_to_dict(formula_list[1:])}  # convert not argument
         pass
-    elif formula_ms[1] == 'some':  # convert 'some' arguments
-        ret = {'exists': ({'relation': formula_ms[0]}, parse_manchester(formula_ms[2]))}
-    elif formula_ms[1] == 'only':  # convert 'only' arguments
-        ret = {'forall': ({'relation': formula_ms[0]}, parse_manchester(formula_ms[2]))}
+    elif formula_list[1] == 'some':  # convert 'some' arguments
+        ret = {'exists': ({'relation': formula_list[0]}, list_to_dict(formula_list[2]))}
+    elif formula_list[1] == 'only':  # convert 'only' arguments
+        ret = {'forall': ({'relation': formula_list[0]}, list_to_dict(formula_list[2]))}
     else:  # what appened ?
         print('PARSER ERROR')
         return None
 
     return ret
+
+
+def parse_manchester(formula_ms):  # parse manchester string to dict
+    return list_to_dict(man_to_list(formula_ms))
+
+
+def parse_owl(formula_owl):
+    return parse_manchester(owl_to_man(formula_owl))

@@ -1,21 +1,11 @@
 import owlready2 as owl
+from lib.onto import *
+from lib.io import *
 
-onto = owl.get_ontology("file:///home/jerko/PycharmProjects/progetto_iweb/data/MusicaOnto.owl").load()
 
-print('concepts:')
-for c in onto.classes():  # classi
-    if c.name == 'Gruppo':
-        eq = c
-    print('\n')
-    print(str(c.name).split('.')[-1])
-    print('---------------')
-    if not c.equivalent_to == []:
-        print(c.equivalent_to)
+f = "file:///home/jerko/PycharmProjects/progetto_iweb/data/MusicaOnto.owl"
+tbox = import_tbox(f)
 
-    for g in c.is_a:
-        print(f"{str(g)}")
+for r in tbox:
+    print(to_str(r))
 
-# %%
-print('\nrelations:')
-for p in onto.properties():
-    print(p.name)
