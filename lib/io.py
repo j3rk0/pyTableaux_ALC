@@ -32,7 +32,7 @@ def to_str(concept):
     return " ".join(ret)  # join buffer element
 
 
-def plot_graph(G, show='all', shape='box'):
+def build_dot_graph(G, show='all', shape='box'):
     dot = gviz.Digraph('tableaux', comment='Tableaux result', format='png')
     for i in range(G.last_individual + 1):
 

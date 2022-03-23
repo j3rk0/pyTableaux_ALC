@@ -99,7 +99,7 @@ res = tab.check_satisfy(C)
 
 # %% plot del grafo risultante del tableaux
 
-graph = plot_graph(res, show='all')
+graph = build_dot_graph(res, show='all')
 graph.view()
 
 # %% benchmark tbox vuota
@@ -140,7 +140,7 @@ C1 = {'and': [{'exists': (S, C)},
 print(to_str(C1))
 t = InferenceEngine()
 res = t.check_satisfy(C1)
-graph = plot_graph(res, show='all', shape='box')
+graph = build_dot_graph(res, show='all', shape='box')
 graph.view()
 
 # %% example with tbox
@@ -160,7 +160,7 @@ print(f'tbox: {to_str(tbox)}\nconcept: {to_str(C1)}')
 eng = InferenceEngine(T=tbox)
 res = eng.check_satisfy(C1)
 if res is not None:
-    graph = plot_graph(res, show='atomic', shape='box')
+    graph = build_dot_graph(res, show='atomic', shape='box')
     graph.view()
 else:
     print('not satisfabile wrt tbox')
@@ -199,5 +199,5 @@ print(f"manchester syntax: {manch}\n"
       f"parsed formula: {to_str(res)}")
 #%%
 model = InferenceEngine().check_satisfy(res)
-graph = plot_graph(model, show='atomic', shape='box')
+graph = build_dot_graph(model, show='atomic', shape='box')
 graph.view()

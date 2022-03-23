@@ -31,6 +31,7 @@ for a node x the labels of x are stored in list G.L[x]. meanwhile for a given re
 edges are stored in G.L['R']
 
 
-in lib.io there are some function to get input from manchester syntax
+in lib.io there are some function to get the concept to satisfy in input from manchester syntax and the tbox from
+an owl file.
 as well as function to render the completion graph in dot languange of graphviz, so that we can
 export it or view it as pdf, image,...
