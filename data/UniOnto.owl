@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#"
+     xml:base="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#insegna -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#insegna"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona"/>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Phd -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Phd">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#PostDoc -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#PostDoc">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Professore -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Professore">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#insegna"/>
+                        <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+                        <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteCicloUnico -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteCicloUnico">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+                <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteDoc -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteDoc">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+                <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Phd"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteMagistrale -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteMagistrale">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+                <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudentePostDoc -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudentePostDoc">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#haConseguito"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Phd"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+                <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#PostDoc"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteTriennale -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteTriennale">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Studente"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#frequenta"/>
+                <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_magistrale"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Phd"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#PostDoc"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteCicloUnico"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteMagistrale"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudentePostDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteTriennale"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteMagistrale"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudentePostDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteTriennale"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+

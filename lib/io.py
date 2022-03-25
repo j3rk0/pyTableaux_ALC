@@ -54,6 +54,28 @@ def build_dot_graph(G, show='all', shape='box'):
 
 
 def man_to_list(formula_ms):  # parse a manchester syntax string in a list
+
+    # FORCE OPERATOR TO BE SYMBOL TO PREVENT MISMATCH WITH VARIABLES CONTAINING OPERATOR STRING
+    formula_ms = formula_ms.replace(' or ', '|')
+    formula_ms = formula_ms.replace(')or ', ')|')
+    formula_ms = formula_ms.replace(' or(', '|(')
+    formula_ms = formula_ms.replace(')or(', ')|(')
+    formula_ms = formula_ms.replace(' and ', '&')
+    formula_ms = formula_ms.replace(')and ', ')&')
+    formula_ms = formula_ms.replace(' and(', '&(')
+    formula_ms = formula_ms.replace(')and(', ')&(')
+    formula_ms = formula_ms.replace(' Not ', '-')
+    formula_ms = formula_ms.replace(')Not ', ')-')
+    formula_ms = formula_ms.replace(' Not(', '-(')
+    formula_ms = formula_ms.replace(')Not(', ')-(')
+    formula_ms = formula_ms.replace(' some ', '%')
+    formula_ms = formula_ms.replace(')some ', ')%')
+    formula_ms = formula_ms.replace(' some(', '%(')
+    formula_ms = formula_ms.replace(')some(', ')%(')
+    formula_ms = formula_ms.replace(' only ', '£')
+    formula_ms = formula_ms.replace(')only ', ')£')
+    formula_ms = formula_ms.replace(' only(', '£(')
+    formula_ms = formula_ms.replace(')only(', ')£(')
     formula_ms = formula_ms.replace(' ', '')
     buffer = ''
     res = []
@@ -79,28 +101,33 @@ def man_to_list(formula_ms):  # parse a manchester syntax string in a list
         buffer += formula_ms[i]
         i += 1
 
-        if 'and' in buffer:
+        sep = key
+        if '&' in buffer:
+            sep = '&'
             key = 'and'
-        elif 'not' in buffer:
-            key = 'not'
-        elif 'or' in buffer:
+        elif '-' in buffer:
+            sep = '-'
+            key = 'neg'
+        elif '|' in buffer:
+            sep = '|'
             key = 'or'
-        elif 'some' in buffer:
+        elif '%' in buffer:
+            sep = '%'
             key = 'some'
-        elif 'only' in buffer:
+        elif '£' in buffer:
+            sep = '£'
             key = 'only'
 
         if not key == '':
-            res += buffer.split(key) + [key]
+            res += buffer.split(sep) + [key]
             buffer = ''
             key = ''
 
     res.append(buffer)
-
     return [t for t in res if not t == '']
 
 
-def owl_to_man(formula_owl):
+def owl_to_man(formula_owl):  # parse owl string in manchester syntax
     formula_owl = formula_owl.replace('&', 'and')
     formula_owl = formula_owl.replace('|', 'or')
     formula_owl = formula_owl.replace('.only', ' only ')
@@ -114,7 +141,7 @@ def owl_to_man(formula_owl):
     return ' '.join(s_entry)
 
 
-def list_to_dict(formula_list):
+def list_to_dict(formula_list):  # parse a list in a string
     ret = None
     if len(formula_list) == 1:
         if type(formula_list[0]) == str:  # formula is an atomic concept
