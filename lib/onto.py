@@ -13,7 +13,9 @@ def import_tbox(file):
     tbox = []
     for C in onto.classes():
         tbox += [{'equival': ({'concept': C.name}, parse_owl(str(D)))} for D in C.equivalent_to]
-        tbox += [{'included': ({'concept': C.name}, parse_owl(str(D)))} for D in C.is_a if not 'Thing' in str(D)]
+        tbox += [{'included': ({'concept': C.name}, parse_owl(str(D)))} for D in C.is_a if 'Thing' not in str(D)]
+        tbox += [{'included': ({'concept': C.name}, {'neg': parse_owl(str(D))})} for p in C.disjoints()
+                 for D in p.entities if not D == C]
     return tbox
 
 
@@ -37,8 +39,18 @@ def gci_to_str(gci):
     key = list(gci.keys())[0]
     if key == 'included':
         return f" {to_str(gci[key][0])} \u2291 {to_str(gci[key][1])}"
-    else:
+    elif key== 'equival':
         return f" {to_str(gci[key][0])} \u2263 {to_str(gci[key][1])}"
+    else:
+        print('GCI Print ERROR')
+        return 'ERR'
 
 
-
+def gci_to_concept(t):
+    if 'included' in t.keys():
+        return {'or': [{'neg': t['included'][0]}, t['included'][1]]}
+    elif 'equival' in t.keys():
+        return {'and': [{'or': [{'neg': t['equival'][0]}, t['equival'][1]]},
+                        {'or': [{'neg': t['equival'][1]}, t['equival'][0]]}]}
+    else:
+        return t

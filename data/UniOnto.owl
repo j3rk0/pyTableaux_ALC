@@ -52,7 +52,9 @@
 
     <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Persona"/>
+    </owl:Class>
     
 
 

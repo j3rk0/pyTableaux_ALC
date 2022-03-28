@@ -98,6 +98,7 @@
                 <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#Traccia"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#Traccia"/>
     </owl:Class>
     
 
@@ -129,7 +130,7 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-8#Singolo"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#Musicista"/>
     </owl:Class>
     
 
@@ -226,14 +227,14 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#contenutaIn"/>
-                <owl:allValuesFrom>
+                <owl:someValuesFrom>
                     <owl:Class>
                         <owl:unionOf rdf:parseType="Collection">
                             <rdf:Description rdf:about="http://swale/Album"/>
                             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#EP"/>
                         </owl:unionOf>
                     </owl:Class>
-                </owl:allValuesFrom>
+                </owl:someValuesFrom>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -254,6 +255,14 @@
             <rdf:Description rdf:about="http://swale/Album"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-8#Singolo"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#EP"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-8#Artista"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-8#Prodotto"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-9#Compositore"/>
         </owl:members>
     </rdf:Description>
 </rdf:RDF>

@@ -1,1 +1,2 @@
 graphviz~=0.19.1
+Owlready2~=0.37

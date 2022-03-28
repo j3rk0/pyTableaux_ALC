@@ -46,15 +46,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Atleta -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Atleta">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Dopato"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Studente"/>
-    </owl:Class>
-    
-
-
     <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide">
@@ -72,6 +63,7 @@
                 <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Droga"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Droga"/>
     </owl:Class>
     
 
@@ -88,69 +80,20 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Dopato">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Consumatore"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente"/>
     </owl:Class>
     
 
 
     <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Droga -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Droga">
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Class>
-                        <owl:complementOf>
-                            <owl:Restriction>
-                                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
-                                <owl:someValuesFrom>
-                                    <owl:Class>
-                                        <owl:unionOf rdf:parseType="Collection">
-                                            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide"/>
-                                            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Depressivo"/>
-                                            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oppiaceo"/>
-                                        </owl:unionOf>
-                                    </owl:Class>
-                                </owl:someValuesFrom>
-                            </owl:Restriction>
-                        </owl:complementOf>
-                    </owl:Class>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
-                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante"/>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Neurologico -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Neurologico">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
-                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oppiaceo"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oncologico"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oncologico -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oncologico">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
-                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Droga"/>
     
 
 
@@ -166,6 +109,20 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Consumatore"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oppiaceo"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
     </owl:Class>
     
 
@@ -177,14 +134,14 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#consuma"/>
-                <owl:allValuesFrom>
+                <owl:someValuesFrom>
                     <owl:Class>
                         <owl:unionOf rdf:parseType="Collection">
                             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Allucinogeno"/>
                             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide"/>
                         </owl:unionOf>
                     </owl:Class>
-                </owl:allValuesFrom>
+                </owl:someValuesFrom>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -195,14 +152,6 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Droga"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Studente -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Studente">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Dopato"/>
     </owl:Class>
     
 
@@ -223,14 +172,6 @@
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Depressivo"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oppiaceo"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante"/>
-        </owl:members>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Dopato"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Ricreativo"/>
         </owl:members>
     </rdf:Description>
 </rdf:RDF>

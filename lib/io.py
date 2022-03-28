@@ -6,29 +6,22 @@ def to_str(concept):
     """ recursive function to print a concept in dict format to a string """
     ret = []  # buffer to build the string
 
-    if 'and' in concept.keys():
-        ret += [f"({to_str(concept['and'][0])}"] + [f"\u2293 {to_str(c)}" for c in concept['and'][1:]] + [')']
+    if concept['type'] == 'and':
+        ret += [f"({to_str(concept['arg'][0])}"] + [f"\u2293 {to_str(c)}" for c in concept['arg'][1:]] + [')']
 
-    elif 'or' in concept.keys():
-        ret += [f"({to_str(concept['or'][0])}"] + [f"\u2294 {to_str(c)}" for c in concept['or'][1:]] + [')']
+    elif concept['type'] == 'or':
+        ret += [f"({to_str(concept['arg'][0])}"] + [f"\u2294 {to_str(c)}" for c in concept['arg'][1:]] + [')']
 
-    elif 'neg' in concept.keys():  # recursively print neg argument
-        ret.append(f"\uFFE2{to_str(concept['neg'])}")
-    elif 'forall' in concept.keys():  # recursively print forall arguments
-        ret.append(f"\u2200{to_str(concept['forall'][0])}.{to_str(concept['forall'][1])}")
-    elif 'exists' in concept.keys():  # recursively print exists argumentsnot({
-        ret.append(f"\u2203{to_str(concept['exists'][0])}.{to_str(concept['exists'][1])}")
-    elif 'concept' in concept.keys():  # print concept name (recursion base case)
-        ret.append(concept['concept'])
-    elif 'relation' in concept.keys():  # print concept name (recursion base case)
-        ret.append(concept['relation'])
-
-    if 'args' in concept.keys():
-        ret.append(f"( x{concept['args'][0]}")
-        for x in concept['args'][1:]:
-            ret.append(f", x{x}")
-        ret.append(")")
-
+    elif concept['type'] == 'neg':  # recursively print neg argument
+        ret.append(f"\uFFE2{to_str(concept['arg'])}")
+    elif concept['type'] == 'forall':  # recursively print forall arguments
+        ret.append(f"\u2200{to_str(concept['arg'][0])}.{to_str(concept['arg'][1])}")
+    elif concept['type'] == 'exists':  # recursively print exists argumentsnot({
+        ret.append(f"\u2203{to_str(concept['arg'][0])}.{to_str(concept['arg'][1])}")
+    elif concept['type'] == 'concept':  # print concept name (recursion base case)
+        ret.append(concept['arg'])
+    elif concept['type'] == 'relation':  # print concept name (recursion base case)
+        ret.append(concept['arg'])
     return " ".join(ret)  # join buffer element
 
 
@@ -40,8 +33,7 @@ def build_dot_graph(G, show='all', shape='box'):
             lc = '\n'.join([to_str(c) for c in G.L[i]])
             dot.node(f"x{i}", f"x{i}\n--------\n{lc}", shape=shape)
         elif show == 'atomic':
-            lc = "; ".join([to_str(c) for c in G.L[i] if 'concept' in c.keys() or
-                            ('neg' in c.keys() and 'concept' in c['neg'].keys())])
+            lc = ",\n".join([to_str(c) for c in G.L[i] if 'concept' in c.keys()])
             dot.node(f"x{i}", f"x{i}:{{{lc}}}", shape=shape)
         else:
             dot.node(f"x{i}", shape=shape)
@@ -56,26 +48,11 @@ def build_dot_graph(G, show='all', shape='box'):
 def man_to_list(formula_ms):  # parse a manchester syntax string in a list
 
     # FORCE OPERATOR TO BE SYMBOL TO PREVENT MISMATCH WITH VARIABLES CONTAINING OPERATOR STRING
-    formula_ms = formula_ms.replace(' or ', '|')
-    formula_ms = formula_ms.replace(')or ', ')|')
-    formula_ms = formula_ms.replace(' or(', '|(')
-    formula_ms = formula_ms.replace(')or(', ')|(')
-    formula_ms = formula_ms.replace(' and ', '&')
-    formula_ms = formula_ms.replace(')and ', ')&')
-    formula_ms = formula_ms.replace(' and(', '&(')
-    formula_ms = formula_ms.replace(')and(', ')&(')
-    formula_ms = formula_ms.replace(' Not ', '-')
-    formula_ms = formula_ms.replace(')Not ', ')-')
-    formula_ms = formula_ms.replace(' Not(', '-(')
-    formula_ms = formula_ms.replace(')Not(', ')-(')
-    formula_ms = formula_ms.replace(' some ', '%')
-    formula_ms = formula_ms.replace(')some ', ')%')
-    formula_ms = formula_ms.replace(' some(', '%(')
-    formula_ms = formula_ms.replace(')some(', ')%(')
-    formula_ms = formula_ms.replace(' only ', '£')
-    formula_ms = formula_ms.replace(')only ', ')£')
-    formula_ms = formula_ms.replace(' only(', '£(')
-    formula_ms = formula_ms.replace(')only(', ')£(')
+    formula_ms = re.sub(r"(?<=[)\s])and(?=[(\s])", '&', formula_ms)
+    formula_ms = re.sub(r"(?<=[)\s])or(?=[(\s])", '|', formula_ms)
+    formula_ms = re.sub(r"(?<=[)\s])Not(?=[(\s])", '-', formula_ms)
+    formula_ms = re.sub(r"(?<=[)\s])some(?=[(\s])", '%', formula_ms)
+    formula_ms = re.sub(r"(?<=[)\s])only(?=[(\s])", '£', formula_ms)
     formula_ms = formula_ms.replace(' ', '')
     buffer = ''
     res = []
@@ -167,15 +144,15 @@ def list_to_dict(formula_list):  # parse a list in a string
                 i = j + 1
             j += 1
         ret['or'].append(list_to_dict(formula_list[i:]))
-    elif formula_list[0] == 'not':
+    elif formula_list[0] == 'neg':
         ret = {'neg': list_to_dict(formula_list[1:])}  # convert not argument
         pass
     elif formula_list[1] == 'some':  # convert 'some' arguments
-        ret = {'exists': ({'relation': formula_list[0]}, list_to_dict(formula_list[2]))}
+        ret = {'exists': ({'relation': formula_list[0]}, list_to_dict([formula_list[2]]))}
     elif formula_list[1] == 'only':  # convert 'only' arguments
-        ret = {'forall': ({'relation': formula_list[0]}, list_to_dict(formula_list[2]))}
+        ret = {'forall': ({'relation': formula_list[0]}, list_to_dict([formula_list[2]]))}
     else:  # what appened ?
-        print('PARSER ERROR')
+        print(f"PARSER ERROR: can't parse {formula_list}")
         return None
 
     return ret

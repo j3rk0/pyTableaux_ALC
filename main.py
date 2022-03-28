@@ -1,21 +1,24 @@
 from lib.formula import *
 from lib.io import *
 from lib.engine import *
+
 # definiamo alcuni concetti e predicati per costruire degli esempi
 
-A = {'concept': 'A'}
-B = {'concept': 'B'}
-C = {'concept': 'C'}
-D = {'concept': 'D'}
-E = {'concept': 'E'}
+A = {'type': 'concept', 'arg': 'A'}
+B = {'type': 'concept', 'arg': 'B'}
+C = {'type': 'concept', 'arg': 'C'}
+D = {'type': 'concept', 'arg': 'D'}
+E = {'type': 'concept', 'arg': 'E'}
 
-R = {'relation': 'R'}
-S = {'relation': 'S'}
+R = {'type': 'relation', 'arg': 'R'}
+S = {'type': 'relation', 'arg': 'S'}
 
 # %% esempio di concetti composti
 
-C1 = {'and': [A, {'exists': (R, B)}, {'exists': (R, {'neg': B})}]}
-C2 = {'and': [{'forall': (S, A)}, {'exists': (R, B)}, {'forall': (R, A)}]}
+C1 = {'type': 'and',
+      'arg': [A, {'type': 'exists', 'arg': (R, B)}, {'type': 'exists', 'arg': (R, {'type': 'neg', 'arg': B})}]}
+C2 = {'type': 'and',
+      'arg': [{'type': 'forall', 'arg': (S, A)}, {'type': 'exists', 'arg': (R, B)}, {'type': 'forall', 'arg': (R, A)}]}
 
 print("a concept:")
 print(to_str(C1))
@@ -24,9 +27,9 @@ print(to_str(C2))
 
 # %%eliminazione parentesi ridondanti
 
-C1 = {'and': [{'and': [A, B]},
-              {'exists': (R, {'and': [{'and': [A, B]}, B]})}
-              ]}
+C1 = {'type': 'and', 'arg': [{'type': 'and', 'arg': [A, B]},
+                             {'type': 'exists', 'arg': (R, {'type': 'and', 'arg': [{'type': 'and', 'arg': [A, B]}, B]})}
+                             ]}
 print(to_str(C1))
 
 C2 = delete_redundant_parenthesis(C1)
@@ -197,7 +200,7 @@ manch = "Pizza and not (hasTopping some FishTopping) and not (hasTopping some Me
 res = parse_manchester(manch)
 print(f"manchester syntax: {manch}\n"
       f"parsed formula: {to_str(res)}")
-#%%
+# %%
 model = InferenceEngine().check_satisfy(res)
 graph = build_dot_graph(model, show='atomic', shape='box')
 graph.view()
