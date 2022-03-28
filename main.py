@@ -37,11 +37,11 @@ print(to_str(C2))
 
 # %% conversione a cnf
 
-C1 = {'or': [{'neg': {'or': [A, B]}},
-             {'or': [
-                 {'neg': C},
-                 D
-             ]}]}
+C1 = {'type': 'or', 'arg': [{'type': 'neg', 'arg': {'type': 'or', 'arg': [A, B]}},
+                            {'type': 'or', 'arg': [
+                                {'type': 'neg', 'arg': C},
+                                D
+                            ]}]}
 
 print('a concept:')
 print(to_str(C1))
@@ -51,7 +51,7 @@ print('concept in cnf:')
 print(to_str(C3))
 
 print('another concept')
-C1 = {'or': [{'neg': {'and': [{'neg': A}, B]}}, C]}
+C1 = {'type': 'or', 'arg': [{'type': 'neg', 'arg': {'type': 'and', 'arg': [{'type': 'neg', 'arg': A}, B]}}, C]}
 print(to_str(C1))
 C2 = cnf(C1)
 C3 = delete_redundant_parenthesis(C2)
@@ -61,10 +61,10 @@ print(to_str(C3))
 # %% conversione a nnf
 
 
-x = {'neg':
-         {'and': [{'neg': C},
-                  {'or': [{'neg': D},
-                          E]}]}}
+x = {'type': 'neg', 'arg':
+    {'type': 'and', 'arg': [{'type': 'neg', 'arg': C},
+                            {'type': 'or', 'arg': [{'type': 'neg', 'arg': D},
+                                                   E]}]}}
 
 print("concept:")
 print(to_str(x))
@@ -72,10 +72,10 @@ print("concept in nnf:")
 nnf_x = nnf(x)
 print(to_str(nnf_x))
 
-x = {'and': [{'neg': {'exists': (R, A)}},
-             {'exists': (R, B)},
-             {'neg': {'and': [A, B]}},
-             {'neg': {'forall': (R, {'or': [A, B]})}}]}
+x = {'type': 'and', 'arg': [{'type': 'neg', 'arg': {'type': 'exists', 'arg': (R, A)}},
+                            {'type': 'exists', 'arg': (R, B)},
+                            {'type': 'neg', 'arg': {'type': 'and', 'arg': [A, B]}},
+                            {'type': 'neg', 'arg': {'type': 'forall', 'arg': (R, {'type': 'or', 'arg': [A, B]})}}]}
 
 print("another concept:")
 print(to_str(x))

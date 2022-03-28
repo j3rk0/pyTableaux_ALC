@@ -62,8 +62,8 @@ def cnf(concept):
                                              {'type': 'neg', 'arg': concept['arg']['arg'][1]}]}
         elif concept['arg']['type'] == 'or':
             concept = {'type': 'and',
-                       'arg': [{'type': 'neg', 'arg': concept['arg']['or'][0]},
-                               {'type': 'neg', 'arg': concept['arg']['or'][1]}]}
+                       'arg': [{'type': 'neg', 'arg': concept['arg']['arg'][0]},
+                               {'type': 'neg', 'arg': concept['arg']['arg'][1]}]}
     return concept
 
 
