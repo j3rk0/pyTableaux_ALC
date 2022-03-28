@@ -122,35 +122,35 @@ def list_to_dict(formula_list):  # parse a list in a string
     ret = None
     if len(formula_list) == 1:
         if type(formula_list[0]) == str:  # formula is an atomic concept
-            ret = {'concept': formula_list[0]}
+            ret = {'type': 'concept', 'arg': formula_list[0]}
         elif type(formula_list[0]) == list:  # formula is a parhentesis
             ret = list_to_dict(formula_list[0])
     elif 'and' in formula_list:
-        ret = {'and': []}
+        ret = {'type': 'and', 'arg': []}
         i = j = 0
         while not j == len(formula_list):
             if formula_list[j] == 'and' and not i == j:  # convert each argument of the and
-                ret['and'].append(list_to_dict(formula_list[i:j]))
+                ret['arg'].append(list_to_dict(formula_list[i:j]))
                 i = j + 1
             j += 1
-        ret['and'].append(list_to_dict(formula_list[i:]))
+        ret['arg'].append(list_to_dict(formula_list[i:]))
 
     elif 'or' in formula_list:
-        ret = {'or': []}
+        ret = {'type': 'or', 'arg': []}
         i = j = 0
         while not j == len(formula_list):
             if formula_list[j] == 'or' and not i == j:  # convert each argument of the or
-                ret['or'].append(list_to_dict(formula_list[i:j]))
+                ret['arg'].append(list_to_dict(formula_list[i:j]))
                 i = j + 1
             j += 1
-        ret['or'].append(list_to_dict(formula_list[i:]))
+        ret['arg'].append(list_to_dict(formula_list[i:]))
     elif formula_list[0] == 'neg':
-        ret = {'neg': list_to_dict(formula_list[1:])}  # convert not argument
+        ret = {'type': 'neg', 'arg': list_to_dict(formula_list[1:])}  # convert not argument
         pass
     elif formula_list[1] == 'some':  # convert 'some' arguments
-        ret = {'exists': ({'relation': formula_list[0]}, list_to_dict([formula_list[2]]))}
+        ret = {'type': 'exists', 'arg': ({'type': 'relation', 'arg': formula_list[0]}, list_to_dict([formula_list[2]]))}
     elif formula_list[1] == 'only':  # convert 'only' arguments
-        ret = {'forall': ({'relation': formula_list[0]}, list_to_dict([formula_list[2]]))}
+        ret = {'type':'forall', 'arg': ({'type':'relation', 'arg': formula_list[0]}, list_to_dict([formula_list[2]]))}
     else:  # what appened ?
         print(f"PARSER ERROR: can't parse {formula_list}")
         return None
