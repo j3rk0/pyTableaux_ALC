@@ -86,7 +86,6 @@
                 <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente"/>
     </owl:Class>
     
 
@@ -170,7 +169,10 @@
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Allucinogeno"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Cannabinoide"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Depressivo"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Dopato"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Oppiaceo"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Paziente"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Ricreativo"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-12#Stimolante"/>
         </owl:members>
     </rdf:Description>

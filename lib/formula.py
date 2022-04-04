@@ -69,7 +69,6 @@ def cnf(concept):
 
 def nnf(concept):
     """ this recursive function convert an axiom to his nnf form"""
-
     if concept['type'] == 'concept':  # nnf(c) = c ( recursion base case)
         return concept
     elif concept['type'] == 'and':  # nnf( c1 and c2) = nnf(c1) and nnf(c2)

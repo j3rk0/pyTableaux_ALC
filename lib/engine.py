@@ -1,6 +1,4 @@
-import lib.onto
-from lib.formula import *
-from lib.onto import *
+from lib.formula import nnf
 
 
 class CompletionGraph:
@@ -24,15 +22,15 @@ class CompletionGraph:
         self.contain_clash.append(False)
 
     def add_edge(self, rel, x, y):
-        if rel['relation'] not in self.E.keys():
-            self.E[rel['relation']] = []
+        if rel['arg'] not in self.E.keys():
+            self.E[rel['arg']] = []
 
-        self.E[rel['relation']].append((x, y))
+        self.E[rel['arg']].append((x, y))
 
     def get_edges(self, rel):
-        if rel['relation'] not in self.E.keys():
+        if rel['arg'] not in self.E.keys():
             return []
-        return self.E[rel['relation']]
+        return self.E[rel['arg']]
 
     def copy(self):
         G = CompletionGraph()
@@ -53,8 +51,31 @@ class InferenceEngine:
 
         self.Tg = self.Tu = []
         if T is not None:
-            self.Tu, self.Tg = tbox_partition(T)
-            self.Tg = [gci_to_concept(t) for t in self.Tg]
+            self.Tu, self.Tg = self.tbox_partition(T)
+            self.Tg = [self.gci_to_concept(t) for t in self.Tg]
+
+    def gci_to_concept(self, t):
+        if t['type'] == 'included':
+            return nnf({'type': 'or', 'arg': [{'type': 'neg', 'arg': t['arg'][0]}, t['arg'][1]]})
+        elif t['type'] == 'equival':
+            return nnf(
+                {'type': 'and', 'arg': [{'type': 'or', 'arg': [{'type': 'neg', 'arg': t['arg'][0]}, t['arg'][1]]},
+                                        {'type': 'or', 'arg': [{'type': 'neg', 'arg': t['arg'][1]}, t['arg'][0]]}]})
+        else:
+            return t
+
+    def unfoldable(self, X, Tu):
+        return not any(axiom['arg'][0] == X['arg'][0] for axiom in Tu)
+
+    def tbox_partition(self, tbox):
+        Tu = []
+        Tg = []
+        for X in tbox:
+            if self.unfoldable(X, Tu):
+                Tu.append(X)
+            else:
+                Tg.append(X)
+        return Tu, Tg
 
     def check_satisfy(self, C):
         C = nnf(C)
@@ -83,7 +104,7 @@ class InferenceEngine:
             if not G.is_complete[x] or G.contain_clash[x]:
 
                 # check for clash
-                if any(t1['neg'] == t2 for t1 in G.L[x] if 'neg' in t1.keys() for t2 in G.L[x]):
+                if any(t1['arg'] == t2 for t1 in G.L[x] if t1['type'] == 'neg' for t2 in G.L[x]):
                     G.contain_clash[x] = True
                     return []
 
@@ -93,12 +114,12 @@ class InferenceEngine:
                     continue
 
                 # apply exhaustively and rule
-                G.L[x] += [t for a in G.L[x] if 'and' in a.keys() for t in a['and'] if t not in G.L[x]]
+                G.L[x] += [t for a in G.L[x] if a['type'] == 'and' for t in a['arg'] if t not in G.L[x]]
 
                 # apply exhaustively exists-rule
                 for a in G.L[x]:
-                    if 'exists' in a.keys():
-                        rel, conc = a['exists']
+                    if a['type'] == 'exists':
+                        rel, conc = a['arg']
 
                         exists_z = False  # are there some z so that r(x,z) and c(z) is in abox?
                         for rx, rz in G.get_edges(rel):
@@ -113,8 +134,8 @@ class InferenceEngine:
 
                 # apply exhaustively forall-rule
                 for a in G.L[x]:
-                    if 'forall' in a.keys():
-                        rel, conc = a['forall']
+                    if a['type'] == 'forall':
+                        rel, conc = a['arg']
 
                         # all the y so that r(x,y) in the abox but not c(y)
                         rcy = [ry for rx, ry in G.get_edges(rel)
@@ -124,32 +145,29 @@ class InferenceEngine:
                             G.L[y].append(conc)
 
                 # unfolding-1 rule
-                G.L[x] += [C['equival'][1] for A in G.L[x] for C in self.Tu
-                           if 'equival' in C.keys() and C['equival'][0] == A and C['equival'][1] not in G.L[x]]
+                G.L[x] += [C['arg'][1] for A in G.L[x] for C in self.Tu
+                           if C['type'] == 'equival' and C['arg'][0] == A and C['arg'][1] not in G.L[x]]
 
                 # unfolding-2 rule
-                G.L[x] += [{'neg': C['equival'][1]} for A in G.L[x] if 'neg' in A.keys()
-                           for C in self.Tu if 'equival' in C.keys() and C['equival'][0] == A['neg']
-                           and {'neg': C['equival'][1]} not in G.L[x]]
+                G.L[x] += [{'type': 'neg', 'arg': C['arg'][1]} for A in G.L[x] if A['type'] == 'neg'
+                           for C in self.Tu if C['type'] == 'equival' and C['arg'][0] == A['arg']
+                           and {'type': 'neg', 'arg': C['arg'][1]} not in G.L[x]]
 
                 # unfolding-3 rule
-                G.L[x] += [C['included'][1] for A in G.L[x] for C in self.Tu
-                           if 'included' in C.keys() and C['included'][0] == A and C['included'][1] not in G.L[x]]
+                G.L[x] += [C['arg'][1] for A in G.L[x] for C in self.Tu
+                           if C['type'] == 'included' and C['arg'][0] == A and C['arg'][1] not in G.L[x]]
 
                 # apply an or rule
                 for a in G.L[x]:
-                    if 'or' in a.keys() and not (a['or'][0] in G.L[x] or a['or'][1] in G.L[x]):
+                    if a['type'] == 'or' and not any(t1 in G.L[x] for t1 in a['arg']):
                         ret = []
-                        if any(t1 in G.L[x] for t1 in a['or']):
-                            continue
-                        for t in a['or']:  # build a new graph for each or term
+                        for t in a['arg']:  # build a new graph for each or term
                             new_G = G.copy()
                             new_G.L[x].append(t)
                             ret.append(new_G)
                         return ret
 
                 G.is_complete[x] = True  # mark node as complete
-
 
             x += 1
         return []

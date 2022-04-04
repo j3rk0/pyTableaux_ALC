@@ -257,6 +257,12 @@
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Laurea_triennale"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Phd"/>
             <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#PostDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#Professore"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteCicloUnico"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteMagistrale"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudentePostDoc"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/vince/ontologies/2022/2/untitled-ontology-13#StudenteTriennale"/>
         </owl:members>
     </rdf:Description>
     <rdf:Description>
