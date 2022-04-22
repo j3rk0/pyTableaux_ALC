@@ -1,5 +1,6 @@
 import graphviz as gviz
 import re
+from rdflib import Graph, URIRef, RDFS
 
 
 class InputManager:
@@ -148,7 +149,26 @@ class OutputManager:
         return dot
 
     def export_rdf(self, G):
-        pass
+
+        graph = Graph()
+        individuals = [URIRef(f'http://www.completion_graph/individual/x{individual}')
+                       for individual in range(G.last_individual+1)]
+
+        uris = {}
+        for concept in self.onto.uris.keys():
+            uris[concept] = URIRef(self.onto.uris[concept])
+
+        for i in range(G.last_individual+1):
+            for label in G.L[i]:
+                if label['type'] == 'concept':
+                    graph.add((individuals[i], RDFS.subClassOf, uris[label['arg']]))
+
+        print(individuals)
+        for prop in G.E.keys():
+            for edge in G.E[prop]:
+                graph.add((individuals[edge[0]], uris[prop], individuals[edge[1]]))
+        graph.serialize(destination='./exported_graph.rdf', format='xml')
+        return graph
 
 
 def to_str(concept):

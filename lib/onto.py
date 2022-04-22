@@ -19,6 +19,10 @@ class Ontology:
     def import_onto(self, file):
         onto = owl.get_ontology(file).load()
         tbox = []
+
+        for P in onto.properties():
+            self.uris[str(P).split('.')[-1]] = f"{str(P.namespace.base_iri)}/{str(P).split('.')[-1]}"
+
         for C in onto.classes():
             self.uris[C.name] = C.iri
             tbox += [{'type': 'equival',
