@@ -16,7 +16,7 @@ for t in tbox:
 
 input_mgr = InputManager()
 
-C = input_mgr.parse_manchester('Musicista and Compositore and (haComposto some Prodotto) and (produce some Album)')
+C = input_mgr.parse_manchester('Musicista')
 print(to_str(C))
 
 # %%

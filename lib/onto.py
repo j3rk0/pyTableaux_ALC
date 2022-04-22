@@ -36,3 +36,6 @@ class Ontology:
 
         self.tbox = tbox
         return tbox
+
+    def print_gci(self):
+        return '\n'.join([to_str(gci) for gci in self.tbox])
